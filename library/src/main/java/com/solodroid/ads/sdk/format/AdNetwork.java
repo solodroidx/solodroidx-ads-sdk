@@ -18,17 +18,13 @@ import static com.solodroid.ads.sdk.util.Constant.STARTAPP;
 import static com.solodroid.ads.sdk.util.Constant.UNITY;
 
 import android.app.Activity;
-import android.text.Html;
 import android.util.Log;
-
-import androidx.appcompat.app.AlertDialog;
 
 import com.applovin.sdk.AppLovinMediationProvider;
 import com.applovin.sdk.AppLovinSdk;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.AdapterStatus;
 import com.ironsource.mediationsdk.IronSource;
-import com.solodroid.ads.sdk.R;
 import com.solodroid.ads.sdk.helper.AudienceNetworkInitializeHelper;
 import com.startapp.sdk.adsbase.StartAppAd;
 import com.startapp.sdk.adsbase.StartAppSDK;

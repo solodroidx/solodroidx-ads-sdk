@@ -724,7 +724,6 @@ public class NativeAdViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    @Deprecated
     public void loadNativeAd(Context context, String adStatus, int placementStatus, String adNetwork, String backupAdNetwork, String adMobNativeId, String adManagerNativeId, String fanNativeId, String appLovinNativeId, boolean darkTheme, boolean legacyGDPR, String nativeAdStyle) {
         if (adStatus.equals(AD_STATUS_ON)) {
             if (placementStatus != 0) {
@@ -1014,7 +1013,6 @@ public class NativeAdViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    @Deprecated
     public void loadBackupNativeAd(Context context, String adStatus, int placementStatus, String backupAdNetwork, String adMobNativeId, String adManagerNativeId, String fanNativeId, String appLovinNativeId, boolean darkTheme, boolean legacyGDPR, String nativeAdStyle) {
         if (adStatus.equals(AD_STATUS_ON)) {
             if (placementStatus != 0) {
@@ -1307,6 +1305,15 @@ public class NativeAdViewHolder extends RecyclerView.ViewHolder {
 
     public void setNativeAdPadding(int left, int top, int right, int bottom) {
         nativeAdViewContainer.setPadding(left, top, right, bottom);
+    }
+
+    public void setNativeAdPadding(Context context, int left, int top, int right, int bottom, boolean darkTheme, int nativeBackgroundLight, int nativeBackgroundDark) {
+        nativeAdViewContainer.setPadding(left, top, right, bottom);
+        if (darkTheme) {
+            nativeAdViewContainer.setBackgroundColor(ContextCompat.getColor(context, nativeBackgroundDark));
+        } else {
+            nativeAdViewContainer.setBackgroundColor(ContextCompat.getColor(context, nativeBackgroundLight));
+        }
     }
 
     public MaxNativeAdView createNativeAdView(Context context, String nativeStyles) {

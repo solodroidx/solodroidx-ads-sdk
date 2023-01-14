@@ -1,11 +1,14 @@
 package com.solodroid.ads.sdkdemo;
 
 import static com.solodroid.ads.sdk.util.Constant.ADMOB;
+import static com.solodroid.ads.sdk.util.Constant.APPLOVIN;
+import static com.solodroid.ads.sdk.util.Constant.APPLOVIN_MAX;
+import static com.solodroid.ads.sdk.util.Constant.GOOGLE_AD_MANAGER;
 
 import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
+import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,8 +16,7 @@ import com.solodroid.ads.sdk.format.AdNetwork;
 
 public class ActivitySplash extends AppCompatActivity {
 
-    private static final long COUNTER_TIME = 2000;
-    long secondsRemaining;
+    public static int DELAY_PROGRESS = 1500;
     Application application;
     AdNetwork.Initialize adNetwork;
 
@@ -25,12 +27,21 @@ public class ActivitySplash extends AppCompatActivity {
 
         initAds();
 
-        if (Constant.AD_NETWORK.equals(ADMOB)) {
-            application = getApplication();
-            ((MyApplication) application).showAdIfAvailable(ActivitySplash.this, this::createTimer);
-        } else {
-            startMainActivity();
-        }
+        application = getApplication();
+
+        new Handler().postDelayed(() -> {
+            switch (Constant.AD_NETWORK) {
+                case ADMOB:
+                case GOOGLE_AD_MANAGER:
+                case APPLOVIN:
+                case APPLOVIN_MAX:
+                    ((MyApplication) application).showAdIfAvailable(ActivitySplash.this, this::startMainActivity);
+                    break;
+                default:
+                    startMainActivity();
+                    break;
+            }
+        }, DELAY_PROGRESS);
 
     }
 
@@ -48,26 +59,12 @@ public class ActivitySplash extends AppCompatActivity {
                 .build();
     }
 
-    private void createTimer() {
-
-        CountDownTimer countDownTimer = new CountDownTimer(COUNTER_TIME, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                secondsRemaining = ((millisUntilFinished / 1000) + 1);
-            }
-
-            @Override
-            public void onFinish() {
-                secondsRemaining = 0;
-                startMainActivity();
-            }
-        };
-        countDownTimer.start();
-    }
-
     public void startMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        this.startActivity(intent);
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }, DELAY_PROGRESS);
     }
 
 }

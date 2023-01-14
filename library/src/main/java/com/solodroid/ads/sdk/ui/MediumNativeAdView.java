@@ -4,15 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 import com.solodroid.ads.sdk.R;
 

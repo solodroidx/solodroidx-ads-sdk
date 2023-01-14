@@ -19,8 +19,8 @@ import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.multidex.MultiDex;
 
+import com.solodroid.ads.sdk.format.AppOpenAdAppLovin;
 import com.solodroid.ads.sdk.format.AppOpenAdManager;
-import com.solodroid.ads.sdk.format.AppOpenAdMax;
 import com.solodroid.ads.sdk.format.AppOpenAdMob;
 import com.solodroid.ads.sdk.util.OnShowAdCompleteListener;
 
@@ -29,7 +29,7 @@ public class MyApplication extends Application implements ActivityLifecycleCallb
     private static MyApplication mInstance;
     private AppOpenAdMob appOpenAdMob;
     private AppOpenAdManager appOpenAdManager;
-    private AppOpenAdMax appOpenAdMax;
+    private AppOpenAdAppLovin appOpenAdAppLovin;
     Activity currentActivity;
 
     public MyApplication() {
@@ -44,7 +44,7 @@ public class MyApplication extends Application implements ActivityLifecycleCallb
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
         appOpenAdMob = new AppOpenAdMob();
         appOpenAdManager = new AppOpenAdManager();
-        appOpenAdMax = new AppOpenAdMax(this, Constant.APPLOVIN_APP_OPEN_AP_ID);
+        appOpenAdAppLovin = new AppOpenAdAppLovin();
 
     }
 
@@ -58,15 +58,22 @@ public class MyApplication extends Application implements ActivityLifecycleCallb
         return mInstance;
     }
 
+    @SuppressWarnings("unused")
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     protected void onMoveToForeground() {
-        // Show the ad (if available) when the app moves to foreground.
-        if (Constant.AD_NETWORK.equals(ADMOB)) {
-            appOpenAdMob.showAdIfAvailable(currentActivity, Constant.ADMOB_APP_OPEN_AD_ID);
-        } else if (Constant.AD_NETWORK.equals(GOOGLE_AD_MANAGER)) {
-            appOpenAdManager.showAdIfAvailable(currentActivity, Constant.GOOGLE_AD_MANAGER_APP_OPEN_AD_ID);
-        } else if (Constant.AD_NETWORK.equals(APPLOVIN) || Constant.AD_NETWORK.equals(APPLOVIN_MAX)) {
-            appOpenAdMax.showAdIfAvailable();
+        if (Constant.isAppOpen) {
+            switch (Constant.AD_NETWORK) {
+                case ADMOB:
+                    appOpenAdMob.showAdIfAvailable(currentActivity, Constant.ADMOB_APP_OPEN_AD_ID);
+                    break;
+                case GOOGLE_AD_MANAGER:
+                    appOpenAdManager.showAdIfAvailable(currentActivity, Constant.GOOGLE_AD_MANAGER_APP_OPEN_AD_ID);
+                    break;
+                case APPLOVIN:
+                case APPLOVIN_MAX:
+                    appOpenAdAppLovin.showAdIfAvailable(currentActivity, Constant.APPLOVIN_APP_OPEN_AP_ID);
+                    break;
+            }
         }
     }
 
@@ -76,18 +83,23 @@ public class MyApplication extends Application implements ActivityLifecycleCallb
 
     @Override
     public void onActivityStarted(@NonNull Activity activity) {
-        if (Constant.AD_NETWORK.equals(ADMOB)) {
-            if (!appOpenAdMob.isShowingAd) {
-                currentActivity = activity;
-            }
-        } else if (Constant.AD_NETWORK.equals(GOOGLE_AD_MANAGER)) {
-            if (!appOpenAdManager.isShowingAd) {
-                currentActivity = activity;
-            }
-        } else if (Constant.AD_NETWORK.equals(APPLOVIN) || Constant.AD_NETWORK.equals(APPLOVIN_MAX)) {
-            if (!appOpenAdMax.isShowingAd) {
-                currentActivity = activity;
-            }
+        switch (Constant.AD_NETWORK) {
+            case ADMOB:
+                if (!appOpenAdMob.isShowingAd) {
+                    currentActivity = activity;
+                }
+                break;
+            case GOOGLE_AD_MANAGER:
+                if (!appOpenAdManager.isShowingAd) {
+                    currentActivity = activity;
+                }
+                break;
+            case APPLOVIN:
+            case APPLOVIN_MAX:
+                if (!appOpenAdAppLovin.isShowingAd) {
+                    currentActivity = activity;
+                }
+                break;
         }
     }
 
@@ -113,13 +125,20 @@ public class MyApplication extends Application implements ActivityLifecycleCallb
 
     public void showAdIfAvailable(@NonNull Activity activity, @NonNull OnShowAdCompleteListener onShowAdCompleteListener) {
         // We wrap the showAdIfAvailable to enforce that other classes only interact with MyApplication
-        // class.
-        if (Constant.AD_NETWORK.equals(ADMOB)) {
-            appOpenAdMob.showAdIfAvailable(activity, Constant.ADMOB_APP_OPEN_AD_ID, onShowAdCompleteListener);
-        } else if (Constant.AD_NETWORK.equals(GOOGLE_AD_MANAGER)) {
-            appOpenAdManager.showAdIfAvailable(activity, Constant.GOOGLE_AD_MANAGER_APP_OPEN_AD_ID, onShowAdCompleteListener);
-        } else if (Constant.AD_NETWORK.equals(APPLOVIN) || Constant.AD_NETWORK.equals(APPLOVIN_MAX)) {
-            appOpenAdMax.showAdIfAvailable();
+        switch (Constant.AD_NETWORK) {
+            case ADMOB:
+                appOpenAdMob.showAdIfAvailable(activity, Constant.ADMOB_APP_OPEN_AD_ID, onShowAdCompleteListener);
+                Constant.isAppOpen = true;
+                break;
+            case GOOGLE_AD_MANAGER:
+                appOpenAdManager.showAdIfAvailable(activity, Constant.GOOGLE_AD_MANAGER_APP_OPEN_AD_ID, onShowAdCompleteListener);
+                Constant.isAppOpen = true;
+                break;
+            case APPLOVIN:
+            case APPLOVIN_MAX:
+                appOpenAdAppLovin.showAdIfAvailable(activity, Constant.APPLOVIN_APP_OPEN_AP_ID, onShowAdCompleteListener);
+                Constant.isAppOpen = true;
+                break;
         }
     }
 

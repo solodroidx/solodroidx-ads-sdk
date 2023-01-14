@@ -827,6 +827,11 @@ public class NativeAd {
         public void setNativeAdPadding(int left, int top, int right, int bottom) {
             nativeAdViewContainer = activity.findViewById(R.id.native_ad_view_container);
             nativeAdViewContainer.setPadding(left, top, right, bottom);
+            if (darkTheme) {
+                nativeAdViewContainer.setBackgroundColor(ContextCompat.getColor(activity, nativeBackgroundDark));
+            } else {
+                nativeAdViewContainer.setBackgroundColor(ContextCompat.getColor(activity, nativeBackgroundLight));
+            }
         }
 
         public MaxNativeAdView createNativeAdView() {

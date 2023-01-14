@@ -162,14 +162,22 @@ public class MainActivity extends AppCompatActivity {
                 .setAppLovinNativeId(Constant.APPLOVIN_NATIVE_MANUAL_ID)
                 .setNativeAdStyle(Constant.NATIVE_STYLE)
                 .setNativeAdBackgroundColor(R.color.colorNativeBackgroundLight, R.color.colorNativeBackgroundDark)
+                .setPadding(0, 0, 0, 0)
                 .setDarkTheme(sharedPref.getIsDarkTheme())
                 .build();
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         bannerAd.destroyAndDetachBanner();
+        Constant.isAppOpen = false;
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onDestroy() {
+        Constant.isAppOpen = false;
+        super.onDestroy();
     }
 
     @Override

@@ -1307,8 +1307,11 @@ public class NativeAdViewHolder extends RecyclerView.ViewHolder {
         nativeAdViewContainer.setPadding(left, top, right, bottom);
     }
 
-    public void setNativeAdPadding(Context context, int left, int top, int right, int bottom, boolean darkTheme, int nativeBackgroundLight, int nativeBackgroundDark) {
-        nativeAdViewContainer.setPadding(left, top, right, bottom);
+    public void setNativeAdCornerRadius(int drawableBackground) {
+        nativeAdViewContainer.setBackgroundResource(drawableBackground);
+    }
+
+    public void setNativeAdBackground(Context context, boolean darkTheme, int nativeBackgroundLight, int nativeBackgroundDark) {
         if (darkTheme) {
             nativeAdViewContainer.setBackgroundColor(ContextCompat.getColor(context, nativeBackgroundDark));
         } else {

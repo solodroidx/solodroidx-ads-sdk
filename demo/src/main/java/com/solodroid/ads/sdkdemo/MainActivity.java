@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
                 nativeAdView.addView(View.inflate(this, R.layout.view_native_ad_video_large, null));
                 break;
             default:
-                nativeAdView.addView(View.inflate(this, R.layout.view_native_ad_medium_round, null));
+                nativeAdView.addView(View.inflate(this, R.layout.view_native_ad_medium, null));
                 break;
         }
     }

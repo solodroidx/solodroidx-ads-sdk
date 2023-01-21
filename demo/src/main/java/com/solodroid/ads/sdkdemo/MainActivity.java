@@ -45,8 +45,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnSelectAds;
     Button btnNativeAdStyle;
     LinearLayout nativeAdView;
-    LinearLayout bannerAdView1;
-    LinearLayout bannerAdView2;
+    LinearLayout bannerAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        bannerAdView1 = findViewById(R.id.banner_ad_view);
-        bannerAdView1.addView(View.inflate(this, R.layout.view_banner_ad, null));
+        bannerAdView = findViewById(R.id.banner_ad_view);
+        bannerAdView.addView(View.inflate(this, R.layout.view_banner_ad, null));
 
         initAds();
         loadBannerAd();
@@ -258,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
                 nativeAdView.addView(View.inflate(this, R.layout.view_native_ad_video_large, null));
                 break;
             default:
-                nativeAdView.addView(View.inflate(this, R.layout.view_native_ad_medium, null));
+                nativeAdView.addView(View.inflate(this, R.layout.view_native_ad_medium_round, null));
                 break;
         }
     }

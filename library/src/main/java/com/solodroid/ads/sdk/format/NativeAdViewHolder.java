@@ -18,6 +18,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -1307,11 +1308,23 @@ public class NativeAdViewHolder extends RecyclerView.ViewHolder {
         nativeAdViewContainer.setPadding(left, top, right, bottom);
     }
 
-    public void setNativeAdCornerRadius(int drawableBackground) {
+    public void setNativeAdMargin(int left, int top, int right, int bottom) {
+        setMargins(nativeAdViewContainer, left, top, right, bottom);
+    }
+
+    public void setMargins(View view, int left, int top, int right, int bottom) {
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            p.setMargins(left, top, right, bottom);
+            view.requestLayout();
+        }
+    }
+
+    public void setNativeAdBackgroundResource(int drawableBackground) {
         nativeAdViewContainer.setBackgroundResource(drawableBackground);
     }
 
-    public void setNativeAdBackground(Context context, boolean darkTheme, int nativeBackgroundLight, int nativeBackgroundDark) {
+    public void setNativeAdBackgroundColor(Context context, boolean darkTheme, int nativeBackgroundLight, int nativeBackgroundDark) {
         if (darkTheme) {
             nativeAdViewContainer.setBackgroundColor(ContextCompat.getColor(context, nativeBackgroundDark));
         } else {

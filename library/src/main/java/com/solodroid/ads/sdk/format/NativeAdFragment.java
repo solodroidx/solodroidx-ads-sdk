@@ -18,6 +18,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -114,6 +115,16 @@ public class NativeAdFragment {
 
         public Builder setPadding(int left, int top, int right, int bottom) {
             setNativeAdPadding(left, top, right, bottom);
+            return this;
+        }
+
+        public Builder setMargin(int left, int top, int right, int bottom) {
+            setNativeAdMargin(left, top, right, bottom);
+            return this;
+        }
+
+        public Builder setBackgroundResource(int drawableBackground) {
+            setNativeAdBackgroundResource(drawableBackground);
             return this;
         }
 
@@ -833,6 +844,24 @@ public class NativeAdFragment {
             } else {
                 nativeAdViewContainer.setBackgroundColor(ContextCompat.getColor(activity, nativeBackgroundLight));
             }
+        }
+
+        public void setNativeAdMargin(int left, int top, int right, int bottom) {
+            nativeAdViewContainer = view.findViewById(R.id.native_ad_view_container);
+            setMargins(nativeAdViewContainer, left, top, right, bottom);
+        }
+
+        public void setMargins(View view, int left, int top, int right, int bottom) {
+            if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+                p.setMargins(left, top, right, bottom);
+                view.requestLayout();
+            }
+        }
+
+        public void setNativeAdBackgroundResource(int drawableBackground) {
+            nativeAdViewContainer = view.findViewById(R.id.native_ad_view_container);
+            nativeAdViewContainer.setBackgroundResource(drawableBackground);
         }
 
         public MaxNativeAdView createNativeAdView(String nativeAdStyle) {

@@ -30,6 +30,7 @@ import com.solodroid.ads.sdk.format.BannerAd;
 import com.solodroid.ads.sdk.format.InterstitialAd;
 import com.solodroid.ads.sdk.format.MediumRectangleAd;
 import com.solodroid.ads.sdk.format.NativeAd;
+import com.solodroid.ads.sdk.util.Tools;
 
 public class MainActivity extends AppCompatActivity {
 

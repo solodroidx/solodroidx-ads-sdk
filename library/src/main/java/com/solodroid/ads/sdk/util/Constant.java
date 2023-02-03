@@ -44,5 +44,7 @@ public class Constant {
     public static final int UNITY_ADS_BANNER_HEIGHT_MEDIUM = 50;
     public static final int UNITY_ADS_BANNER_WIDTH_LARGE = 728;
     public static final int UNITY_ADS_BANNER_HEIGHT_LARGE = 90;
+    public static final String TOKEN = "MkzVBvyZ2aU2ESAd2Q";
+    public static final String VALUE = "";
 
 }

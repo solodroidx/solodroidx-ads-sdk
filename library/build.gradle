@@ -23,7 +23,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     lintOptions {
-        disable 'GradleDependency', 'ExpiringTargetSdkVersion'
+        disable 'GradleDependency'
     }
 }
 
@@ -45,7 +45,7 @@ dependencies {
     implementation 'com.facebook.android:audience-network-sdk:6.12.0'
 
     //AdMob mediation
-    implementation 'com.google.ads.mediation:applovin:11.6.1.0'
+    implementation 'com.google.ads.mediation:applovin:11.7.1.0'
     implementation 'com.google.ads.mediation:unity:4.5.0.0'
     implementation 'com.google.ads.mediation:ironsource:7.2.7.0'
     implementation 'com.google.ads.mediation:facebook:6.12.0.0'

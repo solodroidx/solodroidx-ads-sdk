@@ -45,6 +45,14 @@
             android:layout_height="wrap_content"
             android:visibility="gone" />
 
+        <LinearLayout
+            android:id="@+id/applovin_discovery_mrec_ad_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone" />
+
     </LinearLayout>
 
 </RelativeLayout>

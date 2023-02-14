@@ -3,6 +3,7 @@ package com.solodroid.ads.sdk.format;
 import static com.solodroid.ads.sdk.util.Constant.ADMOB;
 import static com.solodroid.ads.sdk.util.Constant.AD_STATUS_ON;
 import static com.solodroid.ads.sdk.util.Constant.APPLOVIN;
+import static com.solodroid.ads.sdk.util.Constant.APPLOVIN_DISCOVERY;
 import static com.solodroid.ads.sdk.util.Constant.APPLOVIN_MAX;
 import static com.solodroid.ads.sdk.util.Constant.FAN;
 import static com.solodroid.ads.sdk.util.Constant.FAN_BIDDING_ADMOB;
@@ -15,6 +16,7 @@ import static com.solodroid.ads.sdk.util.Constant.UNITY;
 
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,21 +30,27 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.applovin.adview.AppLovinAdView;
 import com.applovin.mediation.MaxAd;
 import com.applovin.mediation.MaxError;
 import com.applovin.mediation.nativeAds.MaxNativeAdListener;
 import com.applovin.mediation.nativeAds.MaxNativeAdLoader;
 import com.applovin.mediation.nativeAds.MaxNativeAdView;
 import com.applovin.mediation.nativeAds.MaxNativeAdViewBinder;
+import com.applovin.sdk.AppLovinAd;
+import com.applovin.sdk.AppLovinAdLoadListener;
+import com.applovin.sdk.AppLovinAdSize;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdOptionsView;
 import com.facebook.ads.NativeAdLayout;
 import com.facebook.ads.NativeAdListener;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.nativead.MediaView;
 import com.solodroid.ads.sdk.R;
+import com.solodroid.ads.sdk.helper.AppLovinCustomEventBanner;
 import com.solodroid.ads.sdk.util.AdManagerTemplateView;
 import com.solodroid.ads.sdk.util.Constant;
 import com.solodroid.ads.sdk.util.NativeTemplateStyle;
@@ -88,6 +96,8 @@ public class NativeAdFragment {
         FrameLayout applovinNativeAd;
         MaxNativeAdLoader nativeAdLoader;
         MaxAd nativeAd;
+        LinearLayout appLovinDiscoveryMrecAd;
+        private AppLovinAdView appLovinAdView;
 
         private String adStatus = "";
         private String adNetwork = "";
@@ -96,6 +106,7 @@ public class NativeAdFragment {
         private String adManagerNativeId = "";
         private String fanNativeId = "";
         private String appLovinNativeId = "";
+        private String appLovinDiscMrecZoneId = "";
         private int placementStatus = 1;
         private boolean darkTheme = false;
         private boolean legacyGDPR = false;
@@ -150,6 +161,11 @@ public class NativeAdFragment {
 
         public Builder setAdMobNativeId(String adMobNativeId) {
             this.adMobNativeId = adMobNativeId;
+            return this;
+        }
+
+        public Builder setAppLovinDiscoveryMrecZoneId(String appLovinDiscMrecZoneId) {
+            this.appLovinDiscMrecZoneId = appLovinDiscMrecZoneId;
             return this;
         }
 
@@ -220,6 +236,7 @@ public class NativeAdFragment {
                 startappNativeBackground = view.findViewById(R.id.startapp_native_background);
 
                 applovinNativeAd = view.findViewById(R.id.applovin_native_ad_container);
+                appLovinDiscoveryMrecAd = view.findViewById(R.id.applovin_discovery_mrec_ad_container);
 
                 switch (adNetwork) {
                     case ADMOB:
@@ -504,6 +521,43 @@ public class NativeAdFragment {
                         }
                         break;
 
+                    case APPLOVIN_DISCOVERY:
+                        if (appLovinDiscoveryMrecAd.getVisibility() != View.VISIBLE) {
+                            AdRequest.Builder builder = new AdRequest.Builder();
+                            Bundle bannerExtras = new Bundle();
+                            bannerExtras.putString("zone_id", appLovinDiscMrecZoneId);
+                            builder.addCustomEventExtrasBundle(AppLovinCustomEventBanner.class, bannerExtras);
+
+                            AppLovinAdSize adSize = AppLovinAdSize.MREC;
+                            this.appLovinAdView = new AppLovinAdView(adSize, activity);
+                            this.appLovinAdView.setAdLoadListener(new AppLovinAdLoadListener() {
+                                @Override
+                                public void adReceived(AppLovinAd ad) {
+                                    appLovinDiscoveryMrecAd.setVisibility(View.VISIBLE);
+                                    nativeAdViewContainer.setVisibility(View.VISIBLE);
+                                }
+
+                                @Override
+                                public void failedToReceiveAd(int errorCode) {
+                                    appLovinDiscoveryMrecAd.setVisibility(View.GONE);
+                                    nativeAdViewContainer.setVisibility(View.GONE);
+                                    loadBackupNativeAd();
+                                }
+                            });
+                            appLovinDiscoveryMrecAd.addView(this.appLovinAdView);
+                            int padding = activity.getResources().getDimensionPixelOffset(R.dimen.gnt_default_margin);
+                            appLovinDiscoveryMrecAd.setPadding(0, padding, 0, padding);
+                            if (darkTheme) {
+                                appLovinDiscoveryMrecAd.setBackgroundResource(nativeBackgroundDark);
+                            } else {
+                                appLovinDiscoveryMrecAd.setBackgroundResource(nativeBackgroundLight);
+                            }
+                            this.appLovinAdView.loadNextAd();
+                        } else {
+                            Log.d(TAG, "AppLovin Discovery Mrec Ad has been loaded");
+                        }
+                        break;
+
                     case UNITY:
                         //do nothing
                         break;
@@ -538,7 +592,9 @@ public class NativeAdFragment {
                 startappNativeButton = view.findViewById(R.id.startapp_native_button);
                 startappNativeButton.setOnClickListener(v -> startappNativeAd.performClick());
                 startappNativeBackground = view.findViewById(R.id.startapp_native_background);
+
                 applovinNativeAd = view.findViewById(R.id.applovin_native_ad_container);
+                appLovinDiscoveryMrecAd = view.findViewById(R.id.applovin_discovery_mrec_ad_container);
 
                 switch (backupAdNetwork) {
                     case ADMOB:
@@ -821,6 +877,42 @@ public class NativeAdFragment {
                             }
                         } else {
                             Log.d(TAG, "AppLovin Native Ad has been loaded");
+                        }
+                        break;
+
+                    case APPLOVIN_DISCOVERY:
+                        if (appLovinDiscoveryMrecAd.getVisibility() != View.VISIBLE) {
+                            AdRequest.Builder builder = new AdRequest.Builder();
+                            Bundle bannerExtras = new Bundle();
+                            bannerExtras.putString("zone_id", appLovinDiscMrecZoneId);
+                            builder.addCustomEventExtrasBundle(AppLovinCustomEventBanner.class, bannerExtras);
+
+                            AppLovinAdSize adSize = AppLovinAdSize.MREC;
+                            this.appLovinAdView = new AppLovinAdView(adSize, activity);
+                            this.appLovinAdView.setAdLoadListener(new AppLovinAdLoadListener() {
+                                @Override
+                                public void adReceived(AppLovinAd ad) {
+                                    appLovinDiscoveryMrecAd.setVisibility(View.VISIBLE);
+                                    nativeAdViewContainer.setVisibility(View.VISIBLE);
+                                }
+
+                                @Override
+                                public void failedToReceiveAd(int errorCode) {
+                                    appLovinDiscoveryMrecAd.setVisibility(View.GONE);
+                                    nativeAdViewContainer.setVisibility(View.GONE);
+                                }
+                            });
+                            appLovinDiscoveryMrecAd.addView(this.appLovinAdView);
+                            int padding = activity.getResources().getDimensionPixelOffset(R.dimen.gnt_default_margin);
+                            appLovinDiscoveryMrecAd.setPadding(0, padding, 0, padding);
+                            if (darkTheme) {
+                                appLovinDiscoveryMrecAd.setBackgroundResource(nativeBackgroundDark);
+                            } else {
+                                appLovinDiscoveryMrecAd.setBackgroundResource(nativeBackgroundLight);
+                            }
+                            this.appLovinAdView.loadNextAd();
+                        } else {
+                            Log.d(TAG, "AppLovin Discovery Mrec Ad has been loaded");
                         }
                         break;
 

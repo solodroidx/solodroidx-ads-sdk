@@ -1,4 +1,4 @@
-package com.solodroid.ads.sdkdemo;
+package com.solodroid.ads.sdkdemo.activity;
 
 import static com.solodroid.ads.sdk.util.Constant.ADMOB;
 import static com.solodroid.ads.sdk.util.Constant.APPLOVIN_DISCOVERY;
@@ -8,14 +8,15 @@ import static com.solodroid.ads.sdk.util.Constant.GOOGLE_AD_MANAGER;
 import static com.solodroid.ads.sdk.util.Constant.IRONSOURCE;
 import static com.solodroid.ads.sdk.util.Constant.STARTAPP;
 import static com.solodroid.ads.sdk.util.Constant.UNITY;
-import static com.solodroid.ads.sdkdemo.Constant.STYLE_DEFAULT;
-import static com.solodroid.ads.sdkdemo.Constant.STYLE_NEWS;
-import static com.solodroid.ads.sdkdemo.Constant.STYLE_RADIO;
-import static com.solodroid.ads.sdkdemo.Constant.STYLE_VIDEO_LARGE;
-import static com.solodroid.ads.sdkdemo.Constant.STYLE_VIDEO_SMALL;
+import static com.solodroid.ads.sdkdemo.data.Constant.STYLE_DEFAULT;
+import static com.solodroid.ads.sdkdemo.data.Constant.STYLE_NEWS;
+import static com.solodroid.ads.sdkdemo.data.Constant.STYLE_RADIO;
+import static com.solodroid.ads.sdkdemo.data.Constant.STYLE_VIDEO_LARGE;
+import static com.solodroid.ads.sdkdemo.data.Constant.STYLE_VIDEO_SMALL;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -24,13 +25,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.solodroid.ads.sdk.format.AdNetwork;
 import com.solodroid.ads.sdk.format.BannerAd;
 import com.solodroid.ads.sdk.format.InterstitialAd;
 import com.solodroid.ads.sdk.format.MediumRectangleAd;
 import com.solodroid.ads.sdk.format.NativeAd;
-import com.solodroid.ads.sdk.util.Tools;
+import com.solodroid.ads.sdk.format.NativeAdView;
+import com.solodroid.ads.sdkdemo.BuildConfig;
+import com.solodroid.ads.sdkdemo.data.Constant;
+import com.solodroid.ads.sdkdemo.R;
+import com.solodroid.ads.sdkdemo.database.SharedPref;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,12 +46,13 @@ public class MainActivity extends AppCompatActivity {
     MediumRectangleAd.Builder mediumRectangleAd;
     InterstitialAd.Builder interstitialAd;
     NativeAd.Builder nativeAd;
+    NativeAdView.Builder nativeAdView;
     SwitchMaterial switchMaterial;
     SharedPref sharedPref;
     Button btnInterstitial;
     Button btnSelectAds;
     Button btnNativeAdStyle;
-    LinearLayout nativeAdView;
+    LinearLayout nativeAdViewContainer;
     LinearLayout bannerAdView;
 
     @Override
@@ -65,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
         loadBannerAd();
         loadInterstitialAd();
 
-        setNativeAdStyle();
+        nativeAdViewContainer = findViewById(R.id.native_ad);
+        setNativeAdStyle(nativeAdViewContainer);
         loadNativeAd();
 
         btnInterstitial = findViewById(R.id.btn_interstitial);
@@ -143,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 .setAppLovinInterstitialId(Constant.APPLOVIN_INTERSTITIAL_ID)
                 .setAppLovinInterstitialZoneId(Constant.APPLOVIN_INTERSTITIAL_ZONE_ID)
                 .setIronSourceInterstitialId(Constant.IRONSOURCE_INTERSTITIAL_ID)
-                .setInterval(1)
+                .setInterval(Constant.INTERSTITIAL_AD_INTERVAL)
                 .build();
     }
 
@@ -160,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
                 .setAdManagerNativeId(Constant.GOOGLE_AD_MANAGER_NATIVE_ID)
                 .setFanNativeId(Constant.FAN_NATIVE_ID)
                 .setAppLovinNativeId(Constant.APPLOVIN_NATIVE_MANUAL_ID)
+                .setAppLovinDiscoveryMrecZoneId(Constant.APPLOVIN_BANNER_MREC_ZONE_ID)
                 .setNativeAdStyle(Constant.NATIVE_STYLE)
                 .setNativeAdBackgroundColor(R.color.colorNativeBackgroundLight, R.color.colorNativeBackgroundDark)
                 .setPadding(0, 0, 0, 0)
@@ -167,11 +176,28 @@ public class MainActivity extends AppCompatActivity {
                 .build();
     }
 
+    private void loadNativeAdView(View view) {
+        nativeAdView = new NativeAdView.Builder(this)
+                .setAdStatus(Constant.AD_STATUS)
+                .setAdNetwork(Constant.AD_NETWORK)
+                .setBackupAdNetwork(Constant.BACKUP_AD_NETWORK)
+                .setAdMobNativeId(Constant.ADMOB_NATIVE_ID)
+                .setAdManagerNativeId(Constant.GOOGLE_AD_MANAGER_NATIVE_ID)
+                .setFanNativeId(Constant.FAN_NATIVE_ID)
+                .setAppLovinNativeId(Constant.APPLOVIN_NATIVE_MANUAL_ID)
+                .setAppLovinDiscoveryMrecZoneId(Constant.APPLOVIN_BANNER_MREC_ZONE_ID)
+                .setNativeAdStyle(Constant.NATIVE_STYLE)
+                .setNativeAdBackgroundColor(R.color.colorNativeBackgroundLight, R.color.colorNativeBackgroundDark)
+                .setDarkTheme(sharedPref.getIsDarkTheme())
+                .setView(view)
+                .build();
+
+        nativeAdView.setPadding(0, 0, 0, 0);
+    }
+
     @Override
     public void onBackPressed() {
-        bannerAd.destroyAndDetachBanner();
-        Constant.isAppOpen = false;
-        super.onBackPressed();
+        showExitDialog();
     }
 
     @Override
@@ -242,8 +268,7 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void setNativeAdStyle() {
-        nativeAdView = findViewById(R.id.native_ad_view);
+    private void setNativeAdStyle(LinearLayout nativeAdView) {
         switch (Constant.NATIVE_STYLE) {
             case "news":
                 nativeAdView.addView(View.inflate(this, R.layout.view_native_ad_news, null));
@@ -292,6 +317,26 @@ public class MainActivity extends AppCompatActivity {
             recreate();
         });
         builder.show();
+    }
+
+    private void showExitDialog() {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.dialog_exit, null);
+
+        LinearLayout nativeAdViewContainer = view.findViewById(R.id.native_ad_view);
+        setNativeAdStyle(nativeAdViewContainer);
+        loadNativeAdView(view);
+
+        AlertDialog.Builder dialog = new MaterialAlertDialogBuilder(this);
+        dialog.setView(view);
+        dialog.setCancelable(false);
+        dialog.setPositiveButton("Exit", (dialogInterface, i) -> {
+            bannerAd.destroyAndDetachBanner();
+            Constant.isAppOpen = false;
+            finish();
+        });
+        dialog.setNegativeButton("Cancel", null);
+        dialog.show();
     }
 
 }

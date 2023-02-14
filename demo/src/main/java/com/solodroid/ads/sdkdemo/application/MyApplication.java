@@ -1,4 +1,4 @@
-package com.solodroid.ads.sdkdemo;
+package com.solodroid.ads.sdkdemo.application;
 
 import static com.solodroid.ads.sdk.util.Constant.ADMOB;
 import static com.solodroid.ads.sdk.util.Constant.APPLOVIN;
@@ -13,8 +13,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.multidex.MultiDex;
@@ -23,25 +25,20 @@ import com.solodroid.ads.sdk.format.AppOpenAdAppLovin;
 import com.solodroid.ads.sdk.format.AppOpenAdManager;
 import com.solodroid.ads.sdk.format.AppOpenAdMob;
 import com.solodroid.ads.sdk.util.OnShowAdCompleteListener;
+import com.solodroid.ads.sdkdemo.data.Constant;
 
-public class MyApplication extends Application implements ActivityLifecycleCallbacks, LifecycleObserver {
+public class MyApplication extends Application implements ActivityLifecycleCallbacks {
 
-    private static MyApplication mInstance;
     private AppOpenAdMob appOpenAdMob;
     private AppOpenAdManager appOpenAdManager;
     private AppOpenAdAppLovin appOpenAdAppLovin;
     Activity currentActivity;
 
-    public MyApplication() {
-        mInstance = this;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
-        mInstance = this;
         this.registerActivityLifecycleCallbacks(this);
-        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(lifecycleObserver);
         appOpenAdMob = new AppOpenAdMob();
         appOpenAdManager = new AppOpenAdManager();
         appOpenAdAppLovin = new AppOpenAdAppLovin();
@@ -54,28 +51,26 @@ public class MyApplication extends Application implements ActivityLifecycleCallb
         MultiDex.install(this);
     }
 
-    public static synchronized MyApplication getInstance() {
-        return mInstance;
-    }
-
-    @SuppressWarnings("unused")
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    protected void onMoveToForeground() {
-        if (Constant.isAppOpen) {
-            switch (Constant.AD_NETWORK) {
-                case ADMOB:
-                    appOpenAdMob.showAdIfAvailable(currentActivity, Constant.ADMOB_APP_OPEN_AD_ID);
-                    break;
-                case GOOGLE_AD_MANAGER:
-                    appOpenAdManager.showAdIfAvailable(currentActivity, Constant.GOOGLE_AD_MANAGER_APP_OPEN_AD_ID);
-                    break;
-                case APPLOVIN:
-                case APPLOVIN_MAX:
-                    appOpenAdAppLovin.showAdIfAvailable(currentActivity, Constant.APPLOVIN_APP_OPEN_AP_ID);
-                    break;
+    LifecycleObserver lifecycleObserver = new DefaultLifecycleObserver() {
+        @Override
+        public void onStart(@NonNull LifecycleOwner owner) {
+            if (Constant.isAppOpen) {
+                switch (Constant.AD_NETWORK) {
+                    case ADMOB:
+                        appOpenAdMob.showAdIfAvailable(currentActivity, Constant.ADMOB_APP_OPEN_AD_ID);
+                        break;
+                    case GOOGLE_AD_MANAGER:
+                        appOpenAdManager.showAdIfAvailable(currentActivity, Constant.GOOGLE_AD_MANAGER_APP_OPEN_AD_ID);
+                        break;
+                    case APPLOVIN:
+                    case APPLOVIN_MAX:
+                        appOpenAdAppLovin.showAdIfAvailable(currentActivity, Constant.APPLOVIN_APP_OPEN_AP_ID);
+                        break;
+                }
             }
+            DefaultLifecycleObserver.super.onStart(owner);
         }
-    }
+    };
 
     @Override
     public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {

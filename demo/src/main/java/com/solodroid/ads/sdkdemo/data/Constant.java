@@ -1,4 +1,4 @@
-package com.solodroid.ads.sdkdemo;
+package com.solodroid.ads.sdkdemo.data;
 
 public class Constant {
 
@@ -33,6 +33,7 @@ public class Constant {
     public static final String APPLOVIN_APP_OPEN_AP_ID = "de9f381d132b859a";
 
     public static final String APPLOVIN_BANNER_ZONE_ID = "afb7122672e86340";
+    public static final String APPLOVIN_BANNER_MREC_ZONE_ID = "81287b697d935c32";
     public static final String APPLOVIN_INTERSTITIAL_ZONE_ID = "b6eba8b976279ea5";
 
     public static final String IRONSOURCE_APP_KEY = "85460dcd";
@@ -48,5 +49,9 @@ public class Constant {
     public static final String STYLE_DEFAULT = "default";
 
     public static boolean isAppOpen = false;
+
+    public static final int INTERSTITIAL_AD_INTERVAL = 3;
+    public static final int NATIVE_AD_INDEX = 2;
+    public static final int NATIVE_AD_INTERVAL = 8;
 
 }

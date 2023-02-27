@@ -16,26 +16,34 @@ import static com.solodroid.ads.sdkdemo.data.Constant.STYLE_VIDEO_SMALL;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.solodroid.ads.sdk.format.AdNetwork;
+import com.solodroid.ads.sdk.format.AppOpenAd;
 import com.solodroid.ads.sdk.format.BannerAd;
 import com.solodroid.ads.sdk.format.InterstitialAd;
 import com.solodroid.ads.sdk.format.MediumRectangleAd;
 import com.solodroid.ads.sdk.format.NativeAd;
 import com.solodroid.ads.sdk.format.NativeAdView;
 import com.solodroid.ads.sdkdemo.BuildConfig;
-import com.solodroid.ads.sdkdemo.data.Constant;
 import com.solodroid.ads.sdkdemo.R;
+import com.solodroid.ads.sdkdemo.data.Constant;
 import com.solodroid.ads.sdkdemo.database.SharedPref;
 
 public class MainActivity extends AppCompatActivity {
@@ -54,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnNativeAdStyle;
     LinearLayout nativeAdViewContainer;
     LinearLayout bannerAdView;
+    AppOpenAd.Builder appOpenAdBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
         getAppTheme();
         setContentView(R.layout.activity_main);
 
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(lifecycleObserver);
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -69,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         bannerAdView.addView(View.inflate(this, R.layout.view_banner_ad, null));
 
         initAds();
+        loadOpenAds();
         loadBannerAd();
         loadInterstitialAd();
 
@@ -106,6 +118,33 @@ public class MainActivity extends AppCompatActivity {
                 .setDebug(BuildConfig.DEBUG)
                 .build();
     }
+
+    private void loadOpenAds() {
+        if (Constant.OPEN_ADS_ON_RESUME) {
+            appOpenAdBuilder = new AppOpenAd.Builder(this)
+                    .setAdStatus(Constant.AD_STATUS)
+                    .setAdNetwork(Constant.AD_NETWORK)
+                    .setBackupAdNetwork(Constant.BACKUP_AD_NETWORK)
+                    .setAdMobAppOpenId(Constant.ADMOB_APP_OPEN_AD_ID)
+                    .setAdManagerAppOpenId(Constant.GOOGLE_AD_MANAGER_APP_OPEN_AD_ID)
+                    .setApplovinAppOpenId(Constant.APPLOVIN_APP_OPEN_AP_ID)
+                    .build();
+        }
+    }
+
+    LifecycleObserver lifecycleObserver = new DefaultLifecycleObserver() {
+        @Override
+        public void onStart(@NonNull LifecycleOwner owner) {
+            DefaultLifecycleObserver.super.onStart(owner);
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                if (Constant.OPEN_ADS_ON_RESUME) {
+                    if (AppOpenAd.isAppOpenAdLoaded) {
+                        appOpenAdBuilder.show();
+                    }
+                }
+            }, 100);
+        }
+    };
 
     private void loadBannerAd() {
         bannerAd = new BannerAd.Builder(this)
@@ -202,8 +241,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        Constant.isAppOpen = false;
         super.onDestroy();
+        appOpenAdBuilder.destroyOpenAd();
+        ProcessLifecycleOwner.get().getLifecycle().removeObserver(lifecycleObserver);
     }
 
     @Override
@@ -332,8 +372,8 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setPositiveButton("Exit", (dialogInterface, i) -> {
             bannerAd.destroyAndDetachBanner();
-            Constant.isAppOpen = false;
-            finish();
+            appOpenAdBuilder.destroyOpenAd();
+            super.onBackPressed();
         });
         dialog.setNegativeButton("Cancel", null);
         dialog.show();

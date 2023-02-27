@@ -1,5 +1,6 @@
 package com.solodroid.ads.sdk.format;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
@@ -32,8 +33,8 @@ public class AppOpenAdManager {
         }
 
         isLoadingAd = true;
-        AdManagerAdRequest request = new AdManagerAdRequest.Builder().build();
-        AppOpenAd.load(context, adManagerAppOpenAdUnitId, request, AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, new AppOpenAd.AppOpenAdLoadCallback() {
+        @SuppressLint("VisibleForTests") AdManagerAdRequest request = new AdManagerAdRequest.Builder().build();
+        AppOpenAd.load(context, adManagerAppOpenAdUnitId, request, new AppOpenAd.AppOpenAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull AppOpenAd ad) {
                 appOpenAd = ad;

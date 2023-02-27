@@ -50,6 +50,9 @@ public class Constant {
 
     public static boolean isAppOpen = false;
 
+    public static final boolean OPEN_ADS_ON_START = true;
+    public static final boolean OPEN_ADS_ON_RESUME = true;
+
     public static final int INTERSTITIAL_AD_INTERVAL = 3;
     public static final int NATIVE_AD_INDEX = 2;
     public static final int NATIVE_AD_INTERVAL = 8;

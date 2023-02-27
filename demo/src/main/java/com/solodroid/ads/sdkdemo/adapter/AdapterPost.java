@@ -10,10 +10,7 @@ import static com.solodroid.ads.sdk.util.Constant.GOOGLE_AD_MANAGER;
 import static com.solodroid.ads.sdk.util.Constant.STARTAPP;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -34,8 +29,6 @@ import com.solodroid.ads.sdkdemo.data.Constant;
 import com.solodroid.ads.sdkdemo.database.SharedPref;
 import com.solodroid.ads.sdkdemo.model.Post;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @SuppressLint("NotifyDataSetChanged")

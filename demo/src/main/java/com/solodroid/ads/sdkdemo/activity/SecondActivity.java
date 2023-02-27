@@ -1,8 +1,6 @@
 package com.solodroid.ads.sdkdemo.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -13,7 +11,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.solodroid.ads.sdk.format.BannerAd;
 import com.solodroid.ads.sdkdemo.R;
 import com.solodroid.ads.sdkdemo.adapter.AdapterPost;

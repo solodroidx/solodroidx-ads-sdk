@@ -33,6 +33,8 @@
     <dimen name="video_primary_font_size">16sp</dimen>
     <dimen name="video_secondary_font_size">13sp</dimen>
 
+    <dimen name="radio_padding_small">5dp</dimen>
+    <dimen name="radio_padding_medium">10dp</dimen>
     <dimen name="radio_thumbnail_width">60dp</dimen>
     <dimen name="radio_thumbnail_height">60dp</dimen>
     <dimen name="radio_primary_font_size">15sp</dimen>

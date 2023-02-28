@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="@dimen/radio_padding_medium">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -104,8 +104,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="@dimen/radio_padding_medium"
+                    android:layout_marginEnd="@dimen/radio_padding_medium"
                     android:layout_toStartOf="@+id/startapp_native_button"
                     android:gravity="center_vertical"
                     android:orientation="vertical">

@@ -1,6 +1,5 @@
 package com.solodroid.ads.sdkdemo.activity;
 
-import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;

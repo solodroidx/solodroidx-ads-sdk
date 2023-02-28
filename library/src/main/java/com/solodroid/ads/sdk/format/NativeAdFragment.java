@@ -338,6 +338,7 @@ public class NativeAdFragment {
 
                                 switch (nativeAdStyle) {
                                     case Constant.STYLE_NEWS:
+                                    case Constant.STYLE_MEDIUM:
                                         nativeAdView = (LinearLayout) inflater.inflate(R.layout.gnt_fan_news_template_view, fanNativeAdLayout, false);
                                         break;
                                     case Constant.STYLE_VIDEO_SMALL:
@@ -347,6 +348,7 @@ public class NativeAdFragment {
                                         nativeAdView = (LinearLayout) inflater.inflate(R.layout.gnt_fan_video_large_template_view, fanNativeAdLayout, false);
                                         break;
                                     case Constant.STYLE_RADIO:
+                                    case Constant.STYLE_SMALL:
                                         nativeAdView = (LinearLayout) inflater.inflate(R.layout.gnt_fan_radio_template_view, fanNativeAdLayout, false);
                                         break;
                                     default:
@@ -749,6 +751,7 @@ public class NativeAdFragment {
 
                                 switch (nativeAdStyle) {
                                     case Constant.STYLE_NEWS:
+                                    case Constant.STYLE_MEDIUM:
                                         nativeAdView = (LinearLayout) inflater.inflate(R.layout.gnt_fan_news_template_view, fanNativeAdLayout, false);
                                         break;
                                     case Constant.STYLE_VIDEO_SMALL:
@@ -758,6 +761,7 @@ public class NativeAdFragment {
                                         nativeAdView = (LinearLayout) inflater.inflate(R.layout.gnt_fan_video_large_template_view, fanNativeAdLayout, false);
                                         break;
                                     case Constant.STYLE_RADIO:
+                                    case Constant.STYLE_SMALL:
                                         nativeAdView = (LinearLayout) inflater.inflate(R.layout.gnt_fan_radio_template_view, fanNativeAdLayout, false);
                                         break;
                                     default:
@@ -960,6 +964,7 @@ public class NativeAdFragment {
             MaxNativeAdViewBinder binder;
             switch (nativeAdStyle) {
                 case Constant.STYLE_NEWS:
+                case Constant.STYLE_MEDIUM:
                     binder = new MaxNativeAdViewBinder.Builder(R.layout.gnt_applovin_news_template_view)
                             .setTitleTextViewId(R.id.title_text_view)
                             .setBodyTextViewId(R.id.body_text_view)
@@ -971,6 +976,7 @@ public class NativeAdFragment {
                             .build();
                     break;
                 case Constant.STYLE_RADIO:
+                case Constant.STYLE_SMALL:
                     binder = new MaxNativeAdViewBinder.Builder(R.layout.gnt_applovin_radio_template_view)
                             .setTitleTextViewId(R.id.title_text_view)
                             .setBodyTextViewId(R.id.body_text_view)
@@ -1022,6 +1028,7 @@ public class NativeAdFragment {
             MaxNativeAdViewBinder binder;
             switch (nativeAdStyle) {
                 case Constant.STYLE_NEWS:
+                case Constant.STYLE_MEDIUM:
                     binder = new MaxNativeAdViewBinder.Builder(R.layout.gnt_applovin_dark_news_template_view)
                             .setTitleTextViewId(R.id.title_text_view)
                             .setBodyTextViewId(R.id.body_text_view)
@@ -1033,6 +1040,7 @@ public class NativeAdFragment {
                             .build();
                     break;
                 case Constant.STYLE_RADIO:
+                case Constant.STYLE_SMALL:
                     binder = new MaxNativeAdViewBinder.Builder(R.layout.gnt_applovin_dark_radio_template_view)
                             .setTitleTextViewId(R.id.title_text_view)
                             .setBodyTextViewId(R.id.body_text_view)

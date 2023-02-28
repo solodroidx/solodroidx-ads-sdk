@@ -27,8 +27,11 @@ public class Constant {
     public static final String FAN_BIDDING_IRONSOURCE = "fan_bidding_ironsource";
 
     //native ad styles
-    public static final String STYLE_NEWS = "news";
+    public static final String STYLE_SMALL = "small";
+    public static final String STYLE_MEDIUM = "medium";
+
     public static final String STYLE_RADIO = "radio";
+    public static final String STYLE_NEWS = "news";
     public static final String STYLE_VIDEO_SMALL = "video_small";
     public static final String STYLE_VIDEO_LARGE = "video_large";
     public static final String STYLE_STREAM = "stream";

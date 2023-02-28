@@ -3,6 +3,7 @@ package com.solodroid.ads.sdk.util;
 import static com.solodroid.ads.sdk.util.Constant.TOKEN;
 import static com.solodroid.ads.sdk.util.Constant.VALUE;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.util.Base64;
 import android.util.DisplayMetrics;
@@ -48,6 +49,7 @@ public class Tools {
         }
     }
 
+    @SuppressLint("VisibleForTests")
     public static AdManagerAdRequest getGoogleAdManagerRequest() {
         return new AdManagerAdRequest.Builder()
                 .build();

@@ -109,6 +109,12 @@ public class AppOpenAd {
                         }
                         break;
 
+                    case APPLOVIN:
+                    case APPLOVIN_MAX:
+                        if (maxAppOpenAd != null) {
+                            maxAppOpenAd = null;
+                        }
+
                     default:
                         //do nothing
                         break;
